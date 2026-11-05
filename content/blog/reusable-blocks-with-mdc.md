@@ -1,0 +1,58 @@
+---
+slug: reusable-blocks-with-mdc
+title: "Work with reusable content blocks"
+description: "Add a useful reminder to an ordinary story with MDC, keeping the component setup separate from the words you want to publish."
+pubDate: "2026-10-26"
+status: "published"
+author: "studio-editorial"
+categories: ["editing", "nuxt"]
+tags: ["MDC", "content editing"]
+featured: false
+readingMinutes: 3
+hero: {"src": "/images/library/the-stone-pavilion.jpeg", "alt": "An intricately carved stone pavilion showcases ornate pillars, sculpted figures, and detailed granite reliefs. Warm sunlight highlights the craftsmanship of this historic Vijayanagara-era architecture against the blue sky. Location: Hampi, Karnataka."}
+relatedPosts: ["your-first-edit", "richer-stories-with-mdc"]
+chapter: 7
+videos: []
+---
+A story should be comfortable to write. Headings, paragraphs, and lists cover most of the work. When you need a reusable block, a short named tag can give those words a familiar place on the page.
+
+::callout{title="Before you publish" tone="info" :compact="false"}
+
+Take a moment to check the complete story:
+
+- Read the title and opening paragraph together.
+- Check the author, topics, and image description.
+- Follow the links a reader might use next.
+
+**A little review makes the next edit easier.**
+
+::
+
+## Edit the words visually
+
+In Marpos Studio, open this story and keep the visual editor selected. Change this paragraph, format a word in bold, or add another check inside the callout. The component stays in place while the text remains editable.
+
+Use **Insert component → Callout** to add another reminder. Select **Edit properties** on a callout to change its heading, style, and spacing in a form. Preview the page and save the edit, then reopen the story to check that the block and its words are still there.
+
+## Let the website handle presentation
+
+The website connects the callout tag to a reusable Nuxt Content component. Authors can focus on the content without adding imports or JavaScript to the story.
+
+Compare this with [the named-slot example](/blog/richer-stories-with-mdc/), which uses named Markdown slots. Both approaches use the same author, topic, related-story, preview, and publishing fields.
+
+![An intricately carved stone pavilion showcases ornate pillars, sculpted figures, and detailed granite reliefs. Warm sunlight highlights the craftsmanship of this historic Vijayanagara-era architecture against the blue sky. Location: Hampi, Karnataka.](/images/library/the-stone-pavilion.jpeg)
+
+::callout{title="Configuratie" tone="warning" :compact="false"}
+
+Wijzig het volgende in de configuratie:
+
+- Add a useful check.
+- Explain the next step.
+
+::
+
+
+
+&nbsp;
+
+Start with [your first content edit](/blog/your-first-edit/) if you want to practise the full workflow before publishing.

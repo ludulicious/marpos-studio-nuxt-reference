@@ -1,0 +1,16 @@
+{
+  "sizes": [
+    {
+      "value": "compact",
+      "label": "Compact"
+    },
+    {
+      "value": "normal",
+      "label": "Normal"
+    },
+    {
+      "value": "wide",
+      "label": "Wide"
+    }
+  ]
+}

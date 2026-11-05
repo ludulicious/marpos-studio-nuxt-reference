@@ -1,0 +1,4 @@
+title: User manual
+icon: i-lucide-book-open
+studio:
+  filters: [status, categories, featured]

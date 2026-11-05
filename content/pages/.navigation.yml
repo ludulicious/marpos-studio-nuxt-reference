@@ -1,0 +1,4 @@
+title: Pages
+icon: i-lucide-file-text
+studio:
+  linkFields: [callToAction.href]
