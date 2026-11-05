@@ -1,3 +1,6 @@
+<script setup lang="ts">
+const sitePath = useSitePath();
+</script>
 <template>
   <footer class="site-footer">
     <div class="footer-main">
@@ -9,7 +12,7 @@
         <NuxtLink to="/blog/">User manual</NuxtLink
         ><NuxtLink to="/library/">Media &amp; credits</NuxtLink
         ><NuxtLink to="/about/">About this showcase</NuxtLink
-        ><a href="/rss.xml">RSS feed ↗</a>
+        ><a :href="sitePath('/rss.xml')">RSS feed ↗</a>
       </div>
     </div>
     <div class="colophon">

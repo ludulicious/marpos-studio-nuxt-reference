@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const sitePath = useSitePath();
 const data = await useReferenceContent();
 const page = computed(() =>
   data.value?.pages.find((item) => item.slug === "home"),
@@ -200,9 +201,12 @@ usePageMeta(() => page.value);
       </ol>
     </section>
     <div class="closing-note">
-      <img src="/favicon.svg" alt="" width="36" height="36" /><ContentRenderer
-        :value="page"
-      />
+      <img
+        :src="sitePath('/favicon.svg')"
+        alt=""
+        width="36"
+        height="36"
+      /><ContentRenderer :value="page" />
     </div>
   </div>
 </template>

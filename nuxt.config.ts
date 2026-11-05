@@ -1,3 +1,7 @@
+import { sitePath } from "./shared/utils/site-path";
+
+const baseURL = process.env.NUXT_APP_BASE_URL || "/";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-09-01",
   modules: ["@nuxt/content", "@nuxt/image"],
@@ -8,10 +12,17 @@ export default defineNuxtConfig({
     "~/assets/css/motion.css",
   ],
   app: {
+    baseURL,
     head: {
       htmlAttrs: { lang: "en" },
       meta: [{ name: "theme-color", content: "#080f27" }],
-      link: [{ rel: "icon", type: "image/svg+xml", href: "/favicon.svg" }],
+      link: [
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: sitePath("/favicon.svg", baseURL),
+        },
+      ],
     },
   },
   runtimeConfig: { public: { siteUrl: "https://example.com" } },

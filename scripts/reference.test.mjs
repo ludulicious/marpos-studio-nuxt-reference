@@ -6,6 +6,19 @@ import Database from "better-sqlite3";
 import { gunzipSync } from "node:zlib";
 
 const output = ".output/public";
+const basePath =
+  `/${(process.env.NUXT_APP_BASE_URL || "/").split("/").filter(Boolean).join("/")}`.replace(
+    /\/$/,
+    "",
+  );
+const publicPath = (path) => `${basePath}${path}`;
+const outputPath = (path) => {
+  assert.ok(
+    path.startsWith(`${basePath}/`),
+    `URL escapes the app base: ${path}`,
+  );
+  return path.slice(basePath.length);
+};
 const htmlAt = (path) => readFileSync(join(output, path, "index.html"), "utf8");
 // Read the generated site's snapshots instead of the live development database.
 const db = new Database(":memory:");
@@ -83,13 +96,13 @@ test("published chapters render, while drafts have no public route or listing", 
     const path = `blog/${post.slug}`;
     if (post.status === "published") {
       assert.ok(existsSync(join(output, path, "index.html")), path);
-      assert.ok(index.includes(`/blog/${post.slug}/`), path);
+      assert.ok(index.includes(publicPath(`/blog/${post.slug}/`)), path);
       assert.ok(htmlAt(path).includes("<h1>"), path);
     } else {
       assert.ok(!existsSync(join(output, path, "index.html")), path);
-      assert.ok(!index.includes(`/blog/${post.slug}/`), path);
-      assert.ok(!feed.includes(`/blog/${post.slug}/`), path);
-      assert.ok(!sitemap.includes(`/blog/${post.slug}/`), path);
+      assert.ok(!index.includes(publicPath(`/blog/${post.slug}/`)), path);
+      assert.ok(!feed.includes(publicPath(`/blog/${post.slug}/`)), path);
+      assert.ok(!sitemap.includes(publicPath(`/blog/${post.slug}/`)), path);
     }
   }
 });
@@ -99,7 +112,7 @@ test("media visibility, previews, local images and attribution survive generatio
   for (const item of media) {
     const path = `library/${item.slug}`;
     if (item.visible) {
-      assert.ok(library.includes(`/${path}/`), path);
+      assert.ok(library.includes(publicPath(`/${path}/`)), path);
       assert.ok(htmlAt(path).includes("About this asset"), path);
       if (item.sourceUrl)
         assert.ok(
@@ -107,7 +120,7 @@ test("media visibility, previews, local images and attribution survive generatio
           path,
         );
     } else {
-      assert.ok(!library.includes(`/${path}/`), path);
+      assert.ok(!library.includes(publicPath(`/${path}/`)), path);
     }
     for (const image of [item.image, item.thumbnail]
       .filter(Boolean)
@@ -147,7 +160,7 @@ test("all generated internal links and image sources point to output files", () 
       const pathname = decodeURIComponent(
         attr.split(/[?#]/)[0].replaceAll("&amp;", "&"),
       );
-      if (!existsSync(join(output, pathname)))
+      if (!existsSync(join(output, outputPath(pathname))))
         broken.push(`${file}: ${pathname}`);
     }
   }
@@ -164,7 +177,8 @@ test("every responsive image candidate is generated as a valid WebP", () => {
     )) {
       for (const candidate of srcset.split(",")) {
         const path = candidate.trim().split(/\s+/)[0].replaceAll("&amp;", "&");
-        if (path.startsWith("/_ipx/")) candidates.add(decodeURIComponent(path));
+        if (path.startsWith(publicPath("/_ipx/")))
+          candidates.add(outputPath(decodeURIComponent(path)));
       }
     }
   }
@@ -173,5 +187,34 @@ test("every responsive image candidate is generated as a valid WebP", () => {
     const bytes = readFileSync(join(output, path));
     assert.equal(bytes.toString("ascii", 0, 4), "RIFF", path);
     assert.equal(bytes.toString("ascii", 8, 12), "WEBP", path);
+  }
+});
+
+test("metadata, feeds and fonts use the deployment base", () => {
+  const origin = process.env.NUXT_PUBLIC_SITE_URL || "https://example.com";
+  const home = htmlAt("");
+  const canonical = home.match(/<link\b[^>]*rel="canonical"[^>]*>/)?.[0];
+  assert.ok(
+    canonical?.includes(`href="${origin}${publicPath("/")}"`),
+    canonical,
+  );
+  assert.ok(home.includes(`${origin}${publicPath("/images/")}`));
+  assert.ok(
+    readFileSync(join(output, "rss.xml"), "utf8").includes(
+      `${origin}${publicPath("/blog/")}`,
+    ),
+  );
+  assert.ok(
+    readFileSync(join(output, "sitemap.xml"), "utf8").includes(
+      `${origin}${publicPath("/library/")}`,
+    ),
+  );
+  for (const file of walk(output).filter((file) => file.endsWith(".css"))) {
+    for (const [, url] of readFileSync(file, "utf8").matchAll(
+      /url\(["']?(\/[^)"']+)["']?\)/g,
+    )) {
+      if (url.startsWith("//")) continue;
+      assert.ok(existsSync(join(output, outputPath(url))), url);
+    }
   }
 });

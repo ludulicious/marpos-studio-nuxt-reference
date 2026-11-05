@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute();
+const sitePath = useSitePath();
 const data = await useReferenceContent();
 const item = computed(() =>
   data.value?.media.find((asset) => asset.slug === route.params.slug),
@@ -85,7 +86,8 @@ usePageMeta(() =>
           <a :href="item.sourceUrl">View original source ↗</a>
         </p>
         <template v-if="item.kind === 'photo'"
-          ><a class="button" :href="item.src" download>Download photo ↓</a
+          ><a class="button" :href="sitePath(item.src)" download
+            >Download photo ↓</a
           ><button
             type="button"
             class="text-button"

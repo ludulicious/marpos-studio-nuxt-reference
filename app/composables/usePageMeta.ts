@@ -1,3 +1,5 @@
+import { siteUrl } from "~~/shared/utils/site-path";
+
 export function usePageMeta(
   page: () =>
     | { title?: string; description?: string; hero?: { src: string } }
@@ -5,7 +7,10 @@ export function usePageMeta(
 ) {
   const route = useRoute();
   const config = useRuntimeConfig();
-  const siteUrl = config.public.siteUrl;
+  const origin = config.public.siteUrl;
+  const publicPath = useSitePath();
+  const absoluteUrl = (path: string) =>
+    siteUrl(path, origin, config.app.baseURL);
   useSeoMeta({
     title: () =>
       route.path === "/"
@@ -15,24 +20,23 @@ export function usePageMeta(
     ogTitle: () => page()?.title,
     ogDescription: () => page()?.description,
     ogImage: () =>
-      new URL(
+      absoluteUrl(
         page()?.hero?.src ?? "/images/library/the-bright-meeting-room.jpg",
-        siteUrl,
-      ).href,
-    ogUrl: () => new URL(route.path, siteUrl).href,
+      ),
+    ogUrl: () => absoluteUrl(route.path),
     ogType: "website",
     twitterCard: "summary_large_image",
   });
   useHead({
     link: [
-      { rel: "canonical", href: () => new URL(route.path, siteUrl).href },
+      { rel: "canonical", href: () => absoluteUrl(route.path) },
       {
         rel: "alternate",
         type: "application/rss+xml",
         title: "Marpos Studio manual",
-        href: "/rss.xml",
+        href: publicPath("/rss.xml"),
       },
-      { rel: "sitemap", href: "/sitemap.xml" },
+      { rel: "sitemap", href: publicPath("/sitemap.xml") },
     ],
   });
 }

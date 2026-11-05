@@ -23,7 +23,28 @@ npm run build    # Optional Nitro server build
 npm run preview  # Preview the Nitro server build
 ```
 
-For static hosting, deploy `.output/public` at the domain root after `npm run generate`. For Node hosting, run `.output/server/index.mjs` after `npm run build`. Set `NUXT_PUBLIC_SITE_URL` to the real origin **before generating/building** for canonical URLs, social images, RSS and sitemap; the development default is `https://example.com`. Hosting is intentionally not tied to the source Astro repository or its GitHub Pages deployment.
+For local static hosting, deploy `.output/public` after `npm run generate`. For Node hosting, run `.output/server/index.mjs` after `npm run build`. Set `NUXT_PUBLIC_SITE_URL` to the deployment **origin** before generating/building for canonical URLs, social images, RSS and sitemap. The development default is `https://example.com`.
+
+## Publishing through GitHub Pages
+
+The `Deploy Nuxt Content to GitHub Pages` workflow runs on every push to `main`, including merged pull requests, and can also be started manually from Actions. It installs from `package-lock.json`, checks types, generates a static website, verifies the output, uploads `.output/public`, and deploys through the `github-pages` environment. Failed builds or tests prevent deployment.
+
+Repository **Settings → Pages → Build and deployment → Source** must be **GitHub Actions**. The workflow reads the configured Pages origin and path from `actions/configure-pages`, so it also supports a future custom domain. No deploy token or repository secret is required; the deployment job uses GitHub's scoped Pages and OIDC permissions.
+
+The expected project URL is [ludulicious.github.io/marpos-studio-nuxt-reference](https://ludulicious.github.io/marpos-studio-nuxt-reference/).
+
+Marpos Studio remains configured at the repository root. Its managed development preview uses `/`, and the existing `studio.preview.json` mappings stay relative to the website root. Add this GitHub repository in Studio, edit and preview content, then use Studio's GitHub publishing flow. Content changes reaching `main` trigger the same Pages workflow as developer changes. If Studio creates a pull request, merge that request into `main` to deploy it. Draft-only changes do not publish a website.
+
+Pull requests run validation for both `/` and `/marpos-studio-nuxt-reference/`, checking content, links, image variants, fonts, feeds, and metadata. To reproduce the Pages build locally:
+
+```sh
+NUXT_APP_BASE_URL=/marpos-studio-nuxt-reference/ \
+NUXT_PUBLIC_SITE_URL=https://ludulicious.github.io npm run generate
+NUXT_APP_BASE_URL=/marpos-studio-nuxt-reference/ \
+NUXT_PUBLIC_SITE_URL=https://ludulicious.github.io npm test
+```
+
+Keep the same environment for generation and tests. `NUXT_APP_BASE_URL` is a build-time deployment setting; do not add it to Studio's preview mappings or ordinary content links. Local previews and root-domain builds need no base-path override.
 
 ## Content and routes
 

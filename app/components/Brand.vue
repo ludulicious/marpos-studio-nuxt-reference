@@ -1,5 +1,6 @@
 <script setup lang="ts">
 defineProps<{ footer?: boolean }>();
+const sitePath = useSitePath();
 </script>
 <template>
   <NuxtLink
@@ -7,7 +8,7 @@ defineProps<{ footer?: boolean }>();
     :class="{ 'brand-footer': footer }"
     to="/"
     aria-label="Marpos Studio home"
-    ><img src="/favicon.svg" width="44" height="44" alt="" /><span
+    ><img :src="sitePath('/favicon.svg')" width="44" height="44" alt="" /><span
       >marpos<span class="brand-studio">studio</span></span
     ></NuxtLink
   >
