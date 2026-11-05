@@ -7,9 +7,25 @@ const sitePath = useSitePath();
     class="brand"
     :class="{ 'brand-footer': footer }"
     to="/"
-    aria-label="Marpos Studio home"
-    ><img :src="sitePath('/favicon.svg')" width="44" height="44" alt="" /><span
-      >marpos<span class="brand-studio">studio</span></span
-    ></NuxtLink
+    aria-label="Marpos Studio — Nuxt Content reference app home"
   >
+    <img :src="sitePath('/favicon.svg')" width="44" height="44" alt="" />
+    <span>
+      marpos<span class="brand-studio">studio</span>
+      <span class="brand-variant">Nuxt Content reference app</span>
+    </span>
+  </NuxtLink>
 </template>
+
+<style scoped>
+  .brand-variant {
+    display: block;
+    margin-top: 0.3rem;
+    color: var(--color-ink-2);
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    line-height: 1.2;
+  }
+</style>
