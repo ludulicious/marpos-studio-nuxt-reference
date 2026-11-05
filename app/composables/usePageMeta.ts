@@ -11,13 +11,14 @@ export function usePageMeta(
   const publicPath = useSitePath();
   const absoluteUrl = (path: string) =>
     siteUrl(path, origin, config.app.baseURL);
+  const pageTitle = () =>
+    route.path === "/"
+      ? `${page()?.title ?? "Nuxt Content reference app"} · Marpos Studio`
+      : `${page()?.title ?? "Marpos Studio"} · Nuxt Content reference app`;
   useSeoMeta({
-    title: () =>
-      route.path === "/"
-        ? `${page()?.title ?? "Nuxt Content reference app"} · Marpos Studio`
-        : `${page()?.title ?? "Marpos Studio"} · Nuxt Content reference app`,
+    title: pageTitle,
     description: () => page()?.description,
-    ogTitle: () => page()?.title,
+    ogTitle: pageTitle,
     ogDescription: () => page()?.description,
     ogImage: () =>
       absoluteUrl(
