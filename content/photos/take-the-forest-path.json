@@ -19,5 +19,9 @@
   ],
   "credit": "Dorian Blanco",
   "visible": true,
-  "order": 19456
+  "order": 19456,
+  "thumbnail": {
+    "src": "/images/library/take-the-forest-path-thumbnail-788ba5272ab1b90d.jpeg",
+    "alt": "A mountain bike with red handlebars on a dirt path through a sunlit forest."
+  }
 }
